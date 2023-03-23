@@ -20,12 +20,7 @@ def predict():
     final_features = np.array(features)
 
     pred_proba = model.predict_proba(features)
-    prediction = pred_proba[0][1]
-
-    if np.isnan(prediction):
-        output = {'error': 'Prediction not available'}
-    else:
-        output = {'prediction': float(prediction)}
+    output = {'prediction': float(pred_proba[0][1])}
 
     return jsonify(output)
 
