@@ -22,8 +22,12 @@ def predict():
     pred_proba = model.predict_proba(features)
     output = pred_proba[0][1]
     
+    response = {
+        'SK_ID_CURR': SK_ID_CURR,
+        'prediction': output
+    }
 
-    return render_template('index.html', prediction_text='Le taux de probabilité que ce client ne rembourse pas est de {}'.format(output))
+    return jsonify(response)
 
 
 
