@@ -8,7 +8,6 @@ app_test=pd.read_pickle("good_app_test.pkl")
 app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
 
-
 @app.route('/predict',methods=['POST'])
 def predict():
     SK_ID_CURR = int(request.form['SK_ID_CURR'])
@@ -25,4 +24,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(port=3000,debug=True)
+    app.run(port=3000)
