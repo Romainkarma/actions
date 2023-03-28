@@ -24,9 +24,9 @@ def predict():
     pred_proba = model.predict_proba(features)
     output = pred_proba[0][1]
     if output > 0.2:
-        response = 1
+        reponse = 1
     else:
-        response = 0
+        reponse = 0
     
     # Get additional information
     days_birth = features.iloc[0]['DAYS_BIRTH']
@@ -41,7 +41,7 @@ def predict():
     response = {
         'SK_ID_CURR': SK_ID_CURR,
         'prediction': output,
-        'response': response,
+        'reponse': reponse,
         'DAYS_BIRTH': days_birth,
         'EXT_SOURCE_2': ext_source_2,
         'EXT_SOURCE_3': ext_source_3,
