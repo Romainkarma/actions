@@ -5,6 +5,7 @@ from sklearn import preprocessing
 import pickle
 
 app_test=pd.read_pickle("good_app_test.pkl")
+app_train=pd.read_pickle("good_app_train_light.pkl")
 
 app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
@@ -22,11 +23,29 @@ def predict():
 
     pred_proba = model.predict_proba(features)
     output = pred_proba[0][1]
+    
+    # Get additional information
+    days_birth = features.iloc[0]['DAYS_BIRTH']
+    ext_source_2 = features.iloc[0]['EXT_SOURCE_2']
+    ext_source_3 = features.iloc[0]['EXT_SOURCE_3']
+    
+    days_birth_list = list(app_train['DAYS_BIRTH'])
+    ext_source_2_list = list(app_train['EXT_SOURCE_2'])
+    ext_source_3_list = list(app_train['EXT_SOURCE_3'])
+    target_train = list(app_train['TARGET'])
 
     response = {
         'SK_ID_CURR': SK_ID_CURR,
-        'prediction': output
+        'prediction': output,
+        'DAYS_BIRTH': days_birth,
+        'EXT_SOURCE_2': ext_source_2,
+        'EXT_SOURCE_3': ext_source_3,
+        'DAYS_BIRTH_LIST': days_birth_list,
+        'EXT_SOURCE_2_LIST': ext_source_2_list,
+        'EXT_SOURCE_3_LIST': ext_source_3_list,
+        'TARGET_TRAIN': target_train
     }
+
 
     return jsonify(response)
 
