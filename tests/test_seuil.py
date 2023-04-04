@@ -24,5 +24,5 @@ coastscore = coastScorer(y_val, y_pred_prob)
 
 def test_seuil():
     
-    assert coastscore > seuil_score, f"Le score métier {coastscore} dépasse le score pour la valeur seuil de 0.2"
+    assert coastscore < seuil_score, f"Le score métier {coastscore} dépasse le score pour la valeur seuil de 0.2"
     
