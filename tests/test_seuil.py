@@ -1,25 +1,28 @@
 import pickle
 import pandas as pd
 import numpy as np
-  
-app_test=pd.read_pickle("good_app_test.pkl")
-model = pickle.load(open('model.pkl', 'rb'))
-sample = app_test.sample(frac=0.01)
-results=[]
-seuil=0.1
+import sklearn.metrics as metrics
 
-SK_ID_CURR=sample["SK_ID_CURR"]
-for value in SK_ID_CURR:
-    features = sample.loc[sample['SK_ID_CURR'] == value]
-    features = features.drop(['SK_ID_CURR'], axis=1)
-    final_features = np.array(features)
+sample_n=pd.read_pickle("sample_n.pkl")
+seuil_score = 5000
 
-    pred_proba = model.predict_proba(features)
-    output = pred_proba[0][1]
-    results.append(output)
+def coastScorer(y_val, y_pred):
+    cm = metrics.confusion_matrix(y_val, y_pred).ravel().tolist()
+    cost = 20*cm[2]- 0*cm[0] + 2*cm[1] - 2*cm[3]
+    return cost
+
+model = pickle.load(open('model.pkl','rb'))
+
+X_val=sample_n.drop(columns=["TARGET"])
+y_val=sample_n["TARGET"]
+
+y_pred = model.predict_proba(X_val)
+y_pred_ok = y_pred[:, 1]
+
+y_pred_prob = (y_pred_ok > 0.2).astype('int')
+coastscore = coastScorer(y_val, y_pred_prob)
 
 def test_seuil():
     
-    average = sum(results) / len(results)
-    assert average <= seuil, f"La moyenne {average} dépasse la valeur seuil de 0.2"
+    assert coastscore > seuil_score, f"Le score métier {coastscore} dépasse le score pour la valeur seuil de 0.2"
     
